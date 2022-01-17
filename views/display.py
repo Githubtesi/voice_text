@@ -1,3 +1,4 @@
+import threading
 import time
 
 import PySimpleGUI as sg
@@ -19,8 +20,8 @@ def init_display():
     show_display_voice_text()
 
 
+# レイアウト設定
 def init_layout_voice_text():
-    # レイアウト設定
     layout = [
         [sg.Text(size=(15, 1), font=('Helvetica', 10), justification='center', key='-jikan-')],
         [sg.Text('Display', size=(20, 1), font=('Helvetica', 20), justification='center', key='-clipbord-')],
@@ -28,20 +29,27 @@ def init_layout_voice_text():
     return layout
 
 
-def close_window():
-    window.close()
+def hide_display_thread(window):
+    # 何秒ディスプレイを表示
+    time.sleep(5)
+    window.write_event_value('-STOP-', '')
+
+
+def hide_display():
+    threading.Thread(target=hide_display_thread, args=(window,), daemon=True).start()
 
 
 def show_display_voice_text():
     while True:
-        event, values = window.read(timeout=100, timeout_key='-timeout-')
+        event, values = window.read(timeout=500, timeout_key='-timeout-')
         # TODO 特定のキーが押されたらbreakするように設定
-        if event in (None, 'Cancel'):
+        if event == '-STOP-':
             break
         elif event in '-timeout-':
             jikan = show_time()
             window['-jikan-'].update(jikan)
             window['-clipbord-'].update(pyperclip.paste())
+            hide_display()
     window.close()
 
 
