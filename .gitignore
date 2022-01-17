@@ -6,3 +6,4 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+/PyAudio-0.2.11-cp310-cp310-win_amd64.whl

@@ -5,12 +5,6 @@ import PySimpleGUI as sg
 import pyperclip
 
 
-# 非同期チェック用として使用
-def show_time():
-    jikan = time.strftime('%p %I:%M:%S')
-    return jikan
-
-
 def init_display():
     global window
     # テーマ設定
@@ -23,15 +17,38 @@ def init_display():
 # レイアウト設定
 def init_layout_voice_text():
     layout = [
-        [sg.Text(size=(15, 1), font=('Helvetica', 10), justification='center', key='-jikan-')],
-        [sg.Text('Display', size=(20, 1), font=('Helvetica', 20), justification='center', key='-clipbord-')],
+        [sg.Text(size=(15, 1), font=('Helvetica', 15), justification='left', key='-countdonw-')],
+        [sg.Text('', size=(20, 1), font=('Helvetica', 20), justification='center', key='-clipbord-')],
     ]
     return layout
 
 
+# 音声認識の初期起動に1.5s必要
+count = 2
+display_time = 15
+
+
+def countdown_thread():
+    global count
+    for _ in range(display_time):
+        count -= 1
+        time.sleep(1)
+
+
+def show_count(count: int) -> str:
+    if count >= 0:
+        return str(count) + "秒待ってね"
+    else:
+        return "残り" + str(display_time + count - 2) + "秒"
+
+
+def countdown():
+    threading.Thread(target=countdown_thread, daemon=True).start()
+
+
 def hide_display_thread(window):
     # 何秒ディスプレイを表示
-    time.sleep(5)
+    time.sleep(display_time)
     window.write_event_value('-STOP-', '')
 
 
@@ -40,16 +57,17 @@ def hide_display():
 
 
 def show_display_voice_text():
+    global count
+    countdown()
+    hide_display()
     while True:
         event, values = window.read(timeout=500, timeout_key='-timeout-')
-        # TODO 特定のキーが押されたらbreakするように設定
         if event == '-STOP-':
+            count = 3
             break
         elif event in '-timeout-':
-            jikan = show_time()
-            window['-jikan-'].update(jikan)
+            window['-countdonw-'].update(show_count(count))
             window['-clipbord-'].update(pyperclip.paste())
-            hide_display()
     window.close()
 
 
