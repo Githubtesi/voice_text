@@ -3,6 +3,7 @@ import time
 import PySimpleGUI as sg
 import pyperclip
 
+
 # 非同期チェック用として使用
 def show_time():
     jikan = time.strftime('%p %I:%M:%S')
@@ -14,7 +15,7 @@ def init_display():
     # テーマ設定
     sg.theme('Dark')
     layout = init_layout_voice_text()
-    window = sg.Window('template', layout)
+    window = sg.Window('template', layout, keep_on_top=True)
     show_display_voice_text()
 
 
@@ -25,6 +26,10 @@ def init_layout_voice_text():
         [sg.Text('Display', size=(20, 1), font=('Helvetica', 20), justification='center', key='-clipbord-')],
     ]
     return layout
+
+
+def close_window():
+    window.close()
 
 
 def show_display_voice_text():
