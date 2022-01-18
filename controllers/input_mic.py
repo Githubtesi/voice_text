@@ -22,7 +22,7 @@ def input_from_mic_thread() -> str:
             query_str = query_str.replace(' ', '')
             pyperclip.copy(query_str)
         except Exception:
-            return "Error"
+            pyperclip.copy("読込エラー")
 
 
 def input_from_mic():
