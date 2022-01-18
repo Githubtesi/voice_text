@@ -7,8 +7,9 @@ import pyperclip
 import config
 
 # 音声認識の初期起動に1.5s必要
-count = 2
+count = 3
 display_time = int(config.time) + count
+
 
 def init_display():
     global window
