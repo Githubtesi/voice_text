@@ -4,6 +4,11 @@ import time
 import PySimpleGUI as sg
 import pyperclip
 
+import config
+
+# 音声認識の初期起動に1.5s必要
+count = 2
+display_time = int(config.time) + count
 
 def init_display():
     global window
@@ -21,11 +26,6 @@ def init_layout_voice_text():
         [sg.Text('', size=(20, 1), font=('Helvetica', 20), justification='center', key='-clipbord-')],
     ]
     return layout
-
-
-# 音声認識の初期起動に1.5s必要
-count = 2
-display_time = 15
 
 
 def countdown_thread():

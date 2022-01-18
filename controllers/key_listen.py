@@ -13,8 +13,7 @@ def start_key_controller():
 
 def on_release(key):
     print('{0} release'.format(key))
-
-    # TODO configファイルでキー設定をできるようにする
+    # TODO configファイルでキー設定をできるようにする->無理かも。初回時に設定するような仕組みのほうがいいかも
     if key == Key.ctrl_r:
         # 音声入力⇒クリップボード保存
         input_from_mic()
